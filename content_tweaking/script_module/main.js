@@ -26,8 +26,8 @@ function check_visibility(el){
   var el_obj = grab_element_attributes(el);
   var offset_bottom = 30; // offset the bottom visibility check (i.e. the bottom edge of the element has to be smaller than the offset to satisfy the invisibility condition)
   var offset_top = 30; // offset the top visibility check
-  console.log("element top is: ",el_obj.top," and window bottom is",window_obj.bottom);
-  console.log("element bottom is: ",el_obj.bottom," and window top is",window_obj.top);
+  // console.log("element top is: ",el_obj.top," and window bottom is",window_obj.bottom);
+  // console.log("element bottom is: ",el_obj.bottom," and window top is",window_obj.top);
 
   var is_visible = (el_obj.top >= window_obj.bottom - offset_top || el_obj.bottom <= offset_bottom) ? false : true;
   return is_visible;
@@ -51,37 +51,40 @@ function grab_window_attributes(){
   return window_dim;
 }
 
+// set img data attributes
+function set_img_data(first_time){
 
-function set_data_attributes(){
-  console.log("Setting up data attributes!");
-  console.log("-----------------------------");
-  var init_visibility = true;
-  //store all images into an array
-  all_img =  document.getElementsByTagName("img");
-  //store all title text into an array
-  all_titles = document.querySelectorAll("h1,h2,h3");
-
+  var query_for_visibility = true;
   // set default image source attributes to all images
   for(var i = 0; i < all_img.length; i++){
-    //get default image source
-    var default_src = all_img[i].src;
-    //set a data attribute to each image with default image source
-    all_img[i].setAttribute("default_src",default_src);
-    var window_attributes = grab_window_attributes();
-    if(init_visibility){
+
+    // only do this when data attributes are set for the first time
+    if(first_time === true){
+      //get default image source
+      var default_src = all_img[i].src;
+      //set a data attribute to each image with default image source
+      all_img[i].setAttribute("default_src",default_src);
+      //default visibility of every image is false, change that with the for loop after
+      all_img[i].setAttribute("visibility",false);
+    }
+
+    // only do it until we keep having visible elements
+    if(query_for_visibility){
       var el_is_visible = check_visibility(all_img[i]);
-      console.log("is element visible?",el_is_visible);
       if(el_is_visible){
-        console.log(all_img[i]);
-      }
-      if(i >= 5){
-        init_visibility = false;
+        all_img[i].setAttribute("visibility",true); // set visibility attribute to true
+      }else{
+        query_for_visibility = false;
       }
     }
-    //console.log("the initial window dimensions are: ",my_window_dim);
-    //all_img[i].setAttribute("is_visible",default_src);
+
   };
 
+}
+
+// set text data attributes
+
+function set_text_data(first_time){
   // set default title text attributes to all titles
   for(var i = 0; i < all_titles.length; i++){
     //get default image source
@@ -94,19 +97,30 @@ function set_data_attributes(){
 
 }
 
-setTimeout(function(){
-  console.log("NOW!");
-  set_data_attributes();
+// setup function, adds data attributes to all img,h1,h2,h3 elements on the page
+function init_set_data_attributes(){
 
-  scroll_handler();
-},1000);
+  console.log("Setting up data attributes!");
+  //store all images into an array
+  all_img =  document.getElementsByTagName("img");
+  //store all title text into an array
+  all_titles = document.querySelectorAll("h1,h2,h3");
+  //set initial data attributes for all images
+  set_img_data(true);
+  //set initial data attributes for all text
+  set_text_data(true);
+  
+}
 
-function doSetTimeout(el,original_src) {
+// revert back to default img source
+// in the future change this to a new image
+
+function revert_img_src(el,original_src) {
   console.log("timeout called!");
   setTimeout(function() { el.src = original_src; }, 3000);
 }
 
-// function that deals with text tweaking
+// black out text
 
 function unblack_text(text_el){
   //console.log(text_el);
@@ -116,6 +130,8 @@ function unblack_text(text_el){
 
 }
 
+// black out textblocks
+
 function blackout_text(text_el){
   text_el.style.color = "black";
   text_el.style.background = "black";
@@ -123,6 +139,8 @@ function blackout_text(text_el){
     unblack_text(text_el);
   },100);
 }
+
+// this tweaks text
 
 function tweak_text(num){
   for(var i = 0; i < num;i++){
@@ -165,12 +183,9 @@ function random_glitch(){
   }
 };
 
-//test if the typewriter effect is working
+//start the typewriter effect
 
 function test_typewriter_effect(text_el){
-  //var lemonde_h1_title = document.querySelector("h1:first-of-type").innerText;
-  //console.log(lemonde_h1_title);
-  //var lemonde_h1_title = document.querySelector("h1:first-of-type");
 
   var typewriter = new Typewriter(text_el, {
   loop: false,
@@ -184,42 +199,45 @@ function test_typewriter_effect(text_el){
 }
 
 
+// Listen for scroll events
 
 function scroll_handler(){
 
-  // Listen for scroll events
   window.addEventListener('scroll', function ( event ) {
       // Clear our timeout throughout the scroll
-      //console.log("we are scrolling!");
       window.clearTimeout( global_is_scrolling );
       random_glitch();
-
-
-      //console.log("window top is",window_dim.top,"and window bottom is",window_dim.bottom);
-
-
-
       global_is_scrolling = setTimeout(function() {
           // Run the callback
           console.log( 'Scrolling has stopped.' );
           check_visibility(first_img);
       }, 1000);
   }, false);
+
 }
 
-function test_function(){
-  var x=document.querySelectorAll("h1,h2,h3");   // Find the elements
-  for(var i = 0; i < x.length; i++){
-  x[i].innerText="dgf01310r89t435ri-e1r42wt24";    // Change the content
-  }
+// function test_function(){
+//   var x=document.querySelectorAll("h1,h2,h3");   // Find the elements
+//   for(var i = 0; i < x.length; i++){
+//   x[i].innerText="dgf01310r89t435ri-e1r42wt24";    // Change the content
+//   }
+//
+//   var y=document.getElementsByTagName("img");
+//   console.log(y);  // Find the elements
+//   for(var i = 0; i < y.length; i++){
+//   var original_src = y[i].src;
+//   if(i < 10){console.log(original_src)};
+//   y[i].src = "https://data.whicdn.com/images/119841484/original.gif";
+//   revert_img_src(y[i],original_src);
+//    // Change the content
+//   }
+// };
 
-  var y=document.getElementsByTagName("img");
-  console.log(y);  // Find the elements
-  for(var i = 0; i < y.length; i++){
-  var original_src = y[i].src;
-  if(i < 10){console.log(original_src)};
-  y[i].src = "https://data.whicdn.com/images/119841484/original.gif";
-  doSetTimeout(y[i],original_src);
-   // Change the content
-  }
-};
+// SETUP
+
+setTimeout(function(){
+  console.log("START SETTING UP NOW!");
+  init_set_data_attributes();
+
+  scroll_handler();
+},1000);

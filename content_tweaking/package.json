@@ -12,6 +12,7 @@
     "cheerio": "^1.0.0-rc.2",
     "fs": "0.0.1-security",
     "http-mitm-proxy": "^0.6.0",
+    "rita": "^1.2.12",
     "swat-proxy": "^1.1.0"
   }
 }

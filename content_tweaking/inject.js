@@ -1,6 +1,6 @@
 'use strict';
 
-var port = 8081;
+var port = 8080;
 
 var Proxy = require('http-mitm-proxy');
 var proxy = Proxy();
@@ -41,6 +41,7 @@ proxy.onError(function(ctx, err, errorKind) {
 proxy.use(Proxy.gunzip);
 
 proxy.onRequest(function(ctx, callback) {
+
   var chunks = [];
   ctx.onResponseData(function(ctx, chunk, callback) {
     chunks.push(chunk);
@@ -48,7 +49,7 @@ proxy.onRequest(function(ctx, callback) {
   });
   ctx.onResponseEnd(function(ctx, callback) {
 
-
+    console.log("we have an incoming request");
     var request_headers = ctx.clientToProxyRequest.headers.host;
     //console.log(request_headers);
     var pattern_match = request_headers.toString().includes(pattern);

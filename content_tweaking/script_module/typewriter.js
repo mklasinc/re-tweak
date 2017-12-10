@@ -411,6 +411,7 @@
 		var typewriter_wrapper_class_name = this.options.wrapperClassName;
 		var typewriter_wrapper = document.createElement('span');
 		typewriter_wrapper.className = typewriter_wrapper_class_name;
+    // here's a second point where you can change text
 		this.el.innerHTML = '';
 		this.el.appendChild(typewriter_wrapper);
 	};
@@ -437,6 +438,7 @@
 		}
 
 		setTimeout(function() {
+      //point to change inner html
 			var el_inner_html = self.el.innerHTML;
 			var item_to_type = self._settings.stringToTypeHTMLArray[0];
 			self.el.querySelector('.' + typewriter_wrapper_class_name).appendChild(item_to_type.el);
@@ -459,6 +461,7 @@
 			var char_id = this._generateUniqueID();
 			char_element.id = char_id;
 			char_element.className = char_class_name + ' typewriter-item-' + i;
+      //here's one point of change
 			char_element.innerHTML = chars_array[i];
 			chars_html_wrap_array.push({
 				id: char_id,
