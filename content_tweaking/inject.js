@@ -21,6 +21,8 @@ var glitch_js_lib = fs.readFileSync('script_module/glitch.js','utf8');
 var glitch_js_script = script_open_tag.concat(glitch_js_lib,script_close_tag);
 var jquery2 = fs.readFileSync('script_module/jquery.2.1.1.min.js','utf8');
 var jquery2_script = script_open_tag.concat(jquery2,script_close_tag);
+var jquery_load = fs.readFileSync('script_module/jquery_loader.js','utf8');
+var jquery_load_script = script_open_tag.concat(jquery_load,script_close_tag);
 
 var pattern = 'monde';
 
@@ -66,8 +68,6 @@ proxy.onRequest(function(ctx, callback) {
         //var main_js_script = '<script>'+ script_obj.get_function_body(my_script_var) +'</script>';
         //var html2canvas = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>';
 
-
-
         //$('body').append(jquery2_script);
         //$('body').append(glitch_js_script);
         //$('body').append(html2canvas_script);
@@ -80,6 +80,8 @@ proxy.onRequest(function(ctx, callback) {
         if(n_index > 0 && pattern_match){
            console.log("injecting js to this address: ", request_headers);
            //body = insert_js_code(body,n_index,foreach_async_script); // inject typewriter effect library
+           //body = insert_js_code(body,n_index,jquery2_script);
+           body = insert_js_code(body,n_index,jquery_load_script);
            body = insert_js_code(body,n_index,typewriter_script); // inject typewriter effect library
            body = insert_js_code(body,n_index,html2canvas_script); //inject html2canvas library, required by glitch.js library
            body = insert_js_code(body,n_index,glitch_js_script); //inject glitch.js

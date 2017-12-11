@@ -109,7 +109,7 @@ function init_set_data_attributes(){
   set_img_data(true);
   //set initial data attributes for all text
   set_text_data(true);
-  
+
 }
 
 // revert back to default img source
@@ -206,12 +206,13 @@ function scroll_handler(){
   window.addEventListener('scroll', function ( event ) {
       // Clear our timeout throughout the scroll
       window.clearTimeout( global_is_scrolling );
-      random_glitch();
+      //random_glitch();
       global_is_scrolling = setTimeout(function() {
           // Run the callback
+          //random_glitch();
           console.log( 'Scrolling has stopped.' );
-          check_visibility(first_img);
-      }, 1000);
+          //console.log(check_visibility(all_img[0]));
+      }, 500);
   }, false);
 
 }
@@ -233,9 +234,11 @@ function scroll_handler(){
 //   }
 // };
 
+
 // SETUP
 
 setTimeout(function(){
+  //check_jquery();
   console.log("START SETTING UP NOW!");
   init_set_data_attributes();
 
