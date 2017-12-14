@@ -11,20 +11,27 @@ var script_open_tag = '<script>';
 var script_close_tag = '</script>';
 
 //var foreach_async_script = script_open_tag.concat(fs.readFileSync('script_module/foreach_async.js','utf8'),script_close_tag);
-var ityped = fs.readFileSync('script_module/typewriter.js','utf8');
+var ityped = fs.readFileSync('script_module/lib/typewriter.js','utf8');
 var typewriter_script = script_open_tag.concat(ityped,script_close_tag);
-var lodash_lib = fs.readFileSync('script_module/lodash.core.js','utf8');
+var lodash_lib = fs.readFileSync('script_module/lib/lodash.core.js','utf8');
 var lodash_script = script_open_tag.concat(lodash_lib,script_close_tag);
-var html2canvas_lib = fs.readFileSync('script_module/html2canvas.js','utf8');
+var html2canvas_lib = fs.readFileSync('script_module/lib/html2canvas.js','utf8');
 var html2canvas_script = script_open_tag.concat(html2canvas_lib,script_close_tag);
-var glitch_js_lib = fs.readFileSync('script_module/glitch.js','utf8');
+var glitch_js_lib = fs.readFileSync('script_module/lib/glitch.js','utf8');
 var glitch_js_script = script_open_tag.concat(glitch_js_lib,script_close_tag);
-var jquery2 = fs.readFileSync('script_module/jquery.2.1.1.min.js','utf8');
+var jquery2 = fs.readFileSync('script_module/lib/jquery.2.1.1.min.js','utf8');
 var jquery2_script = script_open_tag.concat(jquery2,script_close_tag);
-var jquery_load = fs.readFileSync('script_module/jquery_loader.js','utf8');
+var jquery_load = fs.readFileSync('script_module/lib/jquery_loader.js','utf8');
 var jquery_load_script = script_open_tag.concat(jquery_load,script_close_tag);
+var new_titles = fs.readFileSync('script_module/lib/new_titles.js','utf8');
+var new_titles_script = script_open_tag.concat(new_titles,script_close_tag);
 
+var scraped_articles_data = fs.readFileSync('script_module/data/articles.js','utf-8');
+//console.log(scraped_articles_data);
+var scraped_articles_script = script_open_tag.concat(scraped_articles_data,script_close_tag);
+//console.log(scraped_articles_script);
 var pattern = 'monde';
+var conditional_pattern = /lemonde|delfi|foxnews|newsweek|cnn|spiegel|france24|businessinsider|latimes|time|breitbart/g;
 
 //var my_script_var = script_obj.scroll.toString();
 var main_script_body = fs.readFileSync('script_module/main.js','utf8');
@@ -54,7 +61,8 @@ proxy.onRequest(function(ctx, callback) {
     console.log("we have an incoming request");
     var request_headers = ctx.clientToProxyRequest.headers.host;
     //console.log(request_headers);
-    var pattern_match = request_headers.toString().includes(pattern);
+    //var pattern_match = request_headers.toString().includes(pattern);
+    var pattern_match = request_headers.toString().match(conditional_pattern);
     //console.log("we have a match!");
     //if(){
       var body = Buffer.concat(chunks);
@@ -81,7 +89,9 @@ proxy.onRequest(function(ctx, callback) {
            console.log("injecting js to this address: ", request_headers);
            //body = insert_js_code(body,n_index,foreach_async_script); // inject typewriter effect library
            //body = insert_js_code(body,n_index,jquery2_script);
+           body = insert_js_code(body,n_index,new_titles_script);
            body = insert_js_code(body,n_index,jquery_load_script);
+           body = insert_js_code(body,n_index,scraped_articles_script);
            body = insert_js_code(body,n_index,typewriter_script); // inject typewriter effect library
            body = insert_js_code(body,n_index,html2canvas_script); //inject html2canvas library, required by glitch.js library
            body = insert_js_code(body,n_index,glitch_js_script); //inject glitch.js

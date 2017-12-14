@@ -10,6 +10,7 @@ var article_url_array;
 // paths
 var token_path = 'diffbot_token.txt';
 var articles_url_array_path = 'public/articles.txt';
+var titles_path = 'public/data/titles.txt';
 var articles_data_path = 'public/data/articles.json';
 var DIFFBOT_TOKEN = fs.readFileSync(token_path,'utf-8').toString().trim();
 
@@ -92,8 +93,24 @@ function send_scrape_requests(url_array){
 
 };
 
+function read_titles_file(){
+	fs.readFile(titles_path,'utf-8', (err, data) => {
+		if (err) throw err;
+		var title_array = data.trim().split('\n');
+		console.log(title_array);
+		//var title_array_string 
+		// //console.log(current_data.all_articles);
+		fs.writeFile('public/data/articles.js', title_array.toString(), (err) => {
+			if (err) throw err;
+			console.log('The new file has been saved!');
+		});
+	});
+}
+
+read_titles_file();
+
 function scrape(){
 	read_article_url_file(articles_url_array_path);
 }
 
-scrape();
+//scrape();

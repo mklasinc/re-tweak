@@ -1,0 +1,108 @@
+html,body{
+  margin:0;
+  /*background-color: blue;*/
+  font-family: 'Source Code Pro', monospace;
+  font-size:14px;
+}
+
+h1,h2,h3{
+  font-weight: 100;
+  font-size:14px;
+  font-weight: bold;
+}
+
+.list_title{
+  margin: 10px 0 2px 0;
+}
+
+#switch_mode_container{
+    margin-top: 20px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+button{
+  text-decoration:none;
+  font-weight: 700;
+  font-size:14px;
+  font-family: 'Source Code Pro', monospace;
+  color:black;
+  border:none;
+
+}
+
+button:hover{
+  cursor:pointer;
+  background-color: black;
+}
+
+button:focus{
+    outline:0;
+}
+
+#main_title_container{
+  margin-top: 5vh;
+      margin-bottom: 5vh;
+  position: relative;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#body_text_container{
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    max-width: 60%;
+    margin: auto;
+}
+
+.hidden{
+  display: none;
+}
+
+li{
+  list-style-type: none;
+}
+
+.dropdown_content{
+  display: none;
+  margin-bottom: 100px;
+}
+
+.faq_question:hover{
+  cursor:pointer;
+}
+
+.main_title{
+  position: absolute;
+  top: 0;
+}
+
+#main_t_one{
+
+}
+
+#main_t_two{
+
+}
+
+@media screen and (max-width: 700px) {
+  #switch_mode_container{
+    margin-top:20px!important;
+  }
+
+  #body_text_container{
+    max-width: 90%;
+  }
+
+  #main_title_container{
+    border: 0;
+  }
+}
+
+/*#main_title{
+  max-width: 50%;
+}*/
