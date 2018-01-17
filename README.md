@@ -2,7 +2,33 @@
 #### Final project for [Politics of Code](https://github.com/periode/politics-of-code) class at NYU Abu Dhabi
 Re-tweak modifies content on unsecure news websites to show the extent to which unencrypted web, particularly the part of it pertaining to news dissemination, is subject to content modifications. 
 By visibily tweaking online news content, the project aims to spur conversations about news integrity online and online security in general.
+
+## Setup
+#### Hardware
+To make HTTP traffic interception viable, Re-tweak makes use of a wi-fi hotspot. Although specialized wi-fi hardware works best with Re-tweak, I turned a [Macbook into a wi-fi hotspot](https://www.howtogeek.com/214053/how-to-turn-your-mac-into-a-wi-fi-hotspot/). To 
+#### Software
+Re-tweak script builds on a NodeJS module [http-mitm-proxy module](https://github.com/joeferner/node-http-mitm-proxy).
+#### Node dependencies
+- fs   
+- http-mitm-proxy
+#### JS dependencies
+- Jquery
+- [typewriter.js](https://github.com/tameemsafi/typewriterjs)
+
+The script that intercepts HTTP requests and injects custom JS scripts can be found in the <i> content_tweaking </i> folder.
+```
+| - content-tweaking
+| | - inject.js // code injection script
+```
+The script handling content tweaking functionality can be found at the following address.
+```
+| - content-tweaking
+| | - script_module
+| | | - main.js // content tweaking script
+```
    
+## FAQ
+
 ### Why Re-tweak?
 Online content access and exchange can be subject to nefarious interference. 
 In 2017, hacking and manipulating online news is becoming an increasingly common way to engineer public opinion 
@@ -16,7 +42,7 @@ I wanted to add to the conversation about cyber attacks and fake news by making 
 
 ### How does it work?
 
-I am performing a man-in-the-middle attack, which is a widespread form of online spoofing 
+Using NodeJS [http-mitm-proxy module](https://github.com/joeferner/node-http-mitm-proxy), I am performing a man-in-the-middle attack, which is a widespread form of online spoofing 
 [1](https://en.wikipedia.org/wiki/Man-in-the-middle_attack). 
 
 Man-in-the-middle attack is classified as a cyber attack and is illegal in most countries around the world. 
