@@ -1,5 +1,6 @@
 // this script includes the code that will take care of tweaking website content
 
+// set up jquery
 var $;
 if(window.jQuery && !window.$){
   window.$ = window.jQuery;
@@ -16,29 +17,23 @@ var all_paragraphs;
 var global_is_scrolling;
 var g_kill = false;
 
-
-
 // check if an element is visible
 function check_visibility(el){
   var window_obj = grab_window_attributes();
   var el_obj = grab_element_attributes(el);
   var offset_bottom = 100; // offset the bottom visibility check (i.e. the bottom edge of the element has to be smaller than the offset to satisfy the invisibility condition)
   var offset_top = 100; // offset the top visibility check
-   // console.log("element top is: ",el_obj.top," and window bottom is",window_obj.bottom);
-   // console.log("element bottom is: ",el_obj.bottom," and window top is",window_obj.top);
   var is_visible = (el_obj.top >= window_obj.bottom - offset_top || el_obj.bottom <= offset_bottom) ? false : true;
   return is_visible;
 }
 
 // setup function - capture all images and titles in an array and set attributes containing default src images/ title text
-
 function grab_element_attributes(target_el){
   //bounding client rect
   var el_dim = {};
   el_dim.top = target_el.getBoundingClientRect().y;
   el_dim.bottom = el_dim.top+ target_el.getBoundingClientRect().height;
   return el_dim;
-
 }
 
 function grab_window_attributes(){
@@ -47,7 +42,6 @@ function grab_window_attributes(){
   window_dim.bottom = window_dim.top + window.innerHeight;
   return window_dim;
 }
-
 
 // set img data attributes
 function set_img_data(first_time){
@@ -170,25 +164,12 @@ function test_typewriter_effect(text_el,index){
 
 }
 
-// this tweaks text
-
-// function glitch_tweak_text(num){
-//   for(var i = 0; i < num;i++){
-//     var random_index = Math.round(Math.random()*all_titles.length);
-//     var el = all_titles[random_index]
-//     blackout_text(el);
-//   }
-// };
-
 // function that deals with image tweaking
 
 function glitch_tweak_img(el){
   console.log("yupi!");
     var random_gif_index = Math.round(Math.random()*glitch_gif_array.length);
-    //all_img[i].src= "https://i.imgur.com/lu2mN0B.gif";
       el.src = glitch_gif_array[random_gif_index];
-
-    //console.log("the source of image with index",random_image_index,"is",glitch_gif_array[random_gif_index]);
 };
 
 function jquery_exists(){
@@ -270,11 +251,6 @@ function random_glitch(){
     var num_of_img = Math.round(Math.random()*10);
     console.log("glitching", num_of_img, "images");
 
-    // if(Math.random() > 0.7){
-    //   glitch_tweak_img(2);
-    // };
-    //img_content_change(num_of_img);
-
     var num_of_titles = Math.round(Math.random()*10);
     console.log("glitching", num_of_titles, "titles");
     content_change(num_of_img,num_of_titles);
@@ -288,7 +264,6 @@ function source_change(el){
     console.log(el);
     var scraped_img_index = index_randomize(g_new_images.length);
     el.srcset = g_new_images[scraped_img_index];
-    //el.setAttribute(src = articles_data_obj.all_articles[scraped_img_index].img;
 }
 
 function check_new_visibility(){

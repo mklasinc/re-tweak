@@ -1,16 +1,19 @@
 'use strict';
 
+// proxy port
 var port = 8080;
 
+// dependencies
 var Proxy = require('http-mitm-proxy');
 var proxy = Proxy();
 var cheerio = require('cheerio');
 var fs = require('fs');
-//var script_obj = require("./script_module/scroll.js");
+
+// convenience variables
 var script_open_tag = '<script>';
 var script_close_tag = '</script>';
 
-//var foreach_async_script = script_open_tag.concat(fs.readFileSync('script_module/foreach_async.js','utf8'),script_close_tag);
+// load vendor js scripts and put them between html script tags
 var ityped = fs.readFileSync('script_module/lib/typewriter.js','utf8');
 var typewriter_script = script_open_tag.concat(ityped,script_close_tag);
 var lodash_lib = fs.readFileSync('script_module/lib/lodash.core.js','utf8');
@@ -26,21 +29,24 @@ var jquery_load_script = script_open_tag.concat(jquery_load,script_close_tag);
 var new_titles = fs.readFileSync('script_module/lib/new_titles.js','utf8');
 var new_titles_script = script_open_tag.concat(new_titles,script_close_tag);
 
-var scraped_articles_data = fs.readFileSync('script_module/data/articles.js','utf-8');
-//console.log(scraped_articles_data);
-var scraped_articles_script = script_open_tag.concat(scraped_articles_data,script_close_tag);
-//console.log(scraped_articles_script);
-var pattern = 'monde';
-var conditional_pattern = /lemonde|delfi|foxnews|newsweek|cnn|spiegel|france24|businessinsider|latimes|time|breitbart/g;
-
-//var my_script_var = script_obj.scroll.toString();
+// load main js script
 var main_script_body = fs.readFileSync('script_module/main.js','utf8');
 var main_js_script = script_open_tag.concat(main_script_body,script_close_tag);
 
+// if you want to inject scraped articles data, uncomment these lines and use it later in the code injecting function
+// var scraped_articles_data = fs.readFileSync('script_module/data/articles.js','utf-8');
+// var scraped_articles_script = script_open_tag.concat(scraped_articles_data,script_close_tag);
+
+// pattern that matches intercepted http requests for targeted news websites (http only)
+var conditional_pattern = /lemonde|delfi|foxnews|newsweek|cnn|spiegel|france24|businessinsider|latimes|time|breitbart/g;
+
+// convenience function to insert js code at the end of the html body
 function insert_js_code(html_body,splice_index,javascript_code){
   return html_body.slice(0, splice_index - 2) + javascript_code + html_body.slice(splice_index - 2);
 };
 
+// modified example code provided by the node http-mitm-proxy script_module
+// github repo: https://github.com/joeferner/node-http-mitm-proxy
 proxy.onError(function(ctx, err, errorKind) {
   // ctx may be null
   var url = (ctx && ctx.clientToProxyRequest) ? ctx.clientToProxyRequest.url : '';
@@ -58,55 +64,29 @@ proxy.onRequest(function(ctx, callback) {
   });
   ctx.onResponseEnd(function(ctx, callback) {
 
-    console.log("we have an incoming request");
     var request_headers = ctx.clientToProxyRequest.headers.host;
-    //console.log(request_headers);
-    //var pattern_match = request_headers.toString().includes(pattern);
+    // match http request headers for target words
     var pattern_match = request_headers.toString().match(conditional_pattern);
-    //console.log("we have a match!");
-    //if(){
-      var body = Buffer.concat(chunks);
-      var new_body;
+    var body = Buffer.concat(chunks);
       if(ctx.serverToProxyResponse.headers['content-type'] && ctx.serverToProxyResponse.headers['content-type'].indexOf('text/html') === 0) {
-        //body = body.toString().replace(/Lucky/g, 'Sexy');
+
+        //convert body to string
         body = body.toString();
-
-        var $ = cheerio.load(body);
-        //var main_js_script = '<script> alert("Hey there Alia!");</script>';
-        //var main_js_script = '<script>'+ script_obj.get_function_body(my_script_var) +'</script>';
-        //var html2canvas = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>';
-
-        //$('body').append(jquery2_script);
-        //$('body').append(glitch_js_script);
-        //$('body').append(html2canvas_script);
-        //$('body').append(html2canvas);
-        //$('body').append(main_js_script);
-        //var new_body = $.html().toString();
-        //console.log(body);
         var n_index = body.lastIndexOf("body");
-        //console.log(n_index);
+
+        // inject js code
         if(n_index > 0 && pattern_match){
            console.log("injecting js to this address: ", request_headers);
-           //body = insert_js_code(body,n_index,foreach_async_script); // inject typewriter effect library
-           //body = insert_js_code(body,n_index,jquery2_script);
-           body = insert_js_code(body,n_index,new_titles_script);
+           body = insert_js_code(body,n_index,new_titles_script); // new titles
            body = insert_js_code(body,n_index,jquery_load_script);
-           body = insert_js_code(body,n_index,scraped_articles_script);
            body = insert_js_code(body,n_index,typewriter_script); // inject typewriter effect library
            body = insert_js_code(body,n_index,html2canvas_script); //inject html2canvas library, required by glitch.js library
            body = insert_js_code(body,n_index,glitch_js_script); //inject glitch.js
            body = insert_js_code(body,n_index,main_js_script); // inject main script
-          //console.log(new_body);
         }
-        //res.send($.html());
-        //console.log($);
-        //new_body = new Buffer(new_body.toString());
 
       }
       ctx.proxyToClientResponse.write(body);
-
-
-    //}
 
     return callback();
   });
@@ -115,6 +95,4 @@ proxy.onRequest(function(ctx, callback) {
 });
 
 
-
 proxy.listen({ port: port });
-console.log('listening on port ' + port, 'targeting',pattern);

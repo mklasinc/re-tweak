@@ -1,6 +1,5 @@
 html,body{
   margin:0;
-  /*background-color: blue;*/
   font-family: 'Source Code Pro', monospace;
   font-size:14px;
 }
@@ -102,7 +101,3 @@ li{
     border: 0;
   }
 }
-
-/*#main_title{
-  max-width: 50%;
-}*/
