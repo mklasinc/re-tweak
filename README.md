@@ -5,9 +5,26 @@ By visibily tweaking online news content, the project aims to spur conversations
 
 ## Setup
 #### Hardware
-To make HTTP traffic interception viable, Re-tweak makes use of a wi-fi hotspot. Although specialized wi-fi hardware works best with Re-tweak, I turned a [Macbook into a wi-fi hotspot](https://www.howtogeek.com/214053/how-to-turn-your-mac-into-a-wi-fi-hotspot/). To 
+To make HTTP traffic interception viable, Re-tweak makes use of a wi-fi hotspot. Although specialized wi-fi hardware works best with Re-tweak, I turned a [Macbook into a wi-fi hotspot](https://www.howtogeek.com/214053/how-to-turn-your-mac-into-a-wi-fi-hotspot/). In order to intercept hotpspot traffic, external HTTP ports (80 for HTTP, and 443 for HTTPS traffic) need to be rerouted to the port our Re-tweak script listens to (e.g. 8080);   
+Mac port forwarding can be done by running the following commands into the terminal
+```
+echo "
+rdr pass inet proto tcp from any to any port 80 -> 127.0.0.1 port RETWEAK_PORT_NUM
+rdr pass inet proto tcp from any to any port 443 -> 127.0.0.1 port RETWEAK_PORT_NUM
+" | sudo pfctl -ef -
+```
+Display current forwarding rules
+```
+sudo pfctl -s nat
+```
+Remove port forwarding
+```
+sudo pfctl -F all -f /etc/pf.conf
+```
+Source: [Sal Farrarello](https://salferrarello.com/mac-pfctl-port-forwarding/)
+
 #### Software
-Re-tweak script builds on a NodeJS module [http-mitm-proxy module](https://github.com/joeferner/node-http-mitm-proxy).
+Re-tweak script builds on a NodeJS module [http-mitm-proxy module](https://github.com/joeferner/node-http-mitm-proxy). The script intercepts targeted HTTP requests and adds custom JS script to the end of the requested HTML body.
 #### Node dependencies
 - fs   
 - http-mitm-proxy
